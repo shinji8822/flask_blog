@@ -52,5 +52,5 @@ pipenv run python manage.py init_db
 ### 起動
 ```
 pipenv shell
-FLASK_APP=flask_blog flask run
+FLASK_APP=flask_blog flask run -h 0.0.0.0 -p 8000
 ```
