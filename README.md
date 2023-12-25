@@ -5,17 +5,21 @@
 sudo apt install python
 python -V
 > Python 3.10.6
+
 pip --version
 > pip 23.1 from /usr/local/lib/python3.10/dist-packages/pip (python 3.10)
 
 pip install Flask
-pip install pipenv
+python -c "import flask; print( flask.__version__ )"
+> 2.2.3
 
+pip install pipenv
 pipenv --version
 > pipenv, version 2023.3.20
+
 ```
 
-### パッケージ一覧
+### 依存関係
 ```
 pipenv graph
 Flask-Login==0.5.0
