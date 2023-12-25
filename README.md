@@ -55,6 +55,46 @@ pipenv run python manage.py init_db
 
 ### 起動
 ```
-pipenv shell
-FLASK_APP=flask_blog flask run -h 0.0.0.0 -p 8000
+export FLASK_APP=flask_blog 
+/home/shinji/.local/bin/pipenv run flask run --host 0.0.0.0 --port 8000
+```
+
+### systemdサービス登録
+```
+cat <<'EOF | sudo tee /etc/systemd/system/flask-flask_blog.service
+[Unit]
+Description=Flask Web instance
+After=network.target
+
+[Service]
+User=shinji
+WorkingDirectory=/home/shinji/py/application
+#Environment="PATH="
+#Environment="FLASK_SECRET_KEY="
+#Environment="FLASK_MYSQL_HOST="
+#Environment="FLASK_MYSQL_USER="
+#Environment="FLASK_MYSQL_PASSWORD="
+#Environment="FLASK_MYSQL_DB="
+#Environment="FLASK_DEBUG=1"
+#Environment="TEMPLATES_AUTO_RELOAD=1"
+Environment="FLASK_APP=flask_blog"
+ExecStart=/home/shinji/.local/bin/pipenv run flask run --host 0.0.0.0 --port 8000
+
+[Install]
+WantedBy=multi-user.
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl start flask-flask_blog
+sudo systemctl status flask-flask_blog
+● flask-flask_blog.service - Flask Web instance
+     Loaded: loaded (/etc/systemd/system/flask-flask_blog.service; disabled; vendor preset: enabled)
+     Active: active (running) since Mon 2023-12-25 17:26:47 JST; 2s ago
+   Main PID: 24490 (flask)
+      Tasks: 1 (limit: 9245)
+     Memory: 32.3M
+        CPU: 995ms
+     CGroup: /system.slice/flask-flask_blog.service
+             └─24490 /home/shinji/.local/share/virtualenvs/application-flT5KWh4/bin/python /home/shinji/.local/share/vi>
+
 ```
