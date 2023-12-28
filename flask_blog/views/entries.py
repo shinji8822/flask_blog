@@ -1,5 +1,6 @@
 # flask_blog/views.py
 
+from operator import or_
 from flask import request, redirect, url_for, render_template, flash, session
 #from flask_blog import app
 from flask import current_app as app
@@ -10,11 +11,29 @@ from flask import Blueprint
 entry = Blueprint('entry', __name__)
 
 #@app.route('/')
-@entry.route('/')
+@entry.route('/', methods=['GET'])
 @login_required
 def show_entries():
-    entries = Entry.query.order_by(Entry.id.desc()).all()
-    return render_template('entries/index.html', entries=entries)
+    keyword = ''
+    if request.args.get('keyword'):
+        keyword = request.args.get('keyword')
+        #keyword = request.args.get('keyword').split()
+        #keywords = []
+        #for value in keyword:
+        #    keywords.append(or_(Entry.title.like ('%' + value + '%'), Entry.text.like ('%' + value + '%')))
+
+        entries = Entry.query\
+            .filter(\
+                or_(Entry.title.like ('%' + keyword + '%'),Entry.text.like ('%' + keyword + '%'))\
+                #or_(*keywords)
+            )\
+            .order_by(Entry.id.desc()).all()
+            
+        #keyword = ' '.join(keyword)
+    else:
+        entries = Entry.query.order_by(Entry.id.desc()).all()
+    
+    return render_template('entries/index.html', entries=entries, keyword=keyword)
 
 from flask_blog.models.entries import Entry
 #@app.route('/entries/new', methods=['GET'])

@@ -1,11 +1,19 @@
 {% extends "layout.html" %}
 {% block body %}
 <ul class="list-group list-group-flush">
+<!-- 検索フォーム -->
+<form action="{{ url_for('entry.show_entries') }}" method="get">
+    <div class="form-group">
+        <label for="InputKeyword">キーワード</label><button type="submit" class="btn btn-primary">検索</button>
+        <input type="text" class="form-control" id="InputKeyword" value="{{ keyword }}" name="keyword">
+    </div>
+</form>
+<!-- 検索フォーム -->
 {% for entry in entries %}
         <div class="card">
                 <div class="card-body">
                         <h5 class="card-title">{{ entry.title }}</h5>
-                        <a href="{{ url_for('entry.show_entry', id=entry.id) }}" class="card-link">続きを読む</a>
+                        <a href="{{ url_for('entry.show_entry', id=entry.id) }}" class="card-link">...</a>
                 </div>
         </div>
 {% else %}
